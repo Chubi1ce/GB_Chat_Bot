@@ -1,9 +1,10 @@
 import asyncio
 import config
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
 import logging
 import random
+from keyboards import keyboard
 
 #Логирование
 logging.basicConfig(level=logging.INFO)
@@ -14,7 +15,7 @@ dp = Dispatcher()
 
 @dp.message(Command(commands="start"))
 async def start(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.full_name}")
+    await message.answer(f"Привет, {message.from_user.full_name}",reply_markup=keyboard)
 
 @dp.message(Command(commands="стоп"))
 @dp.message(Command(commands="stop"))
@@ -25,6 +26,21 @@ async def stop(message: types.Message):
 @dp.message(Command(commands="info"))
 async def start(message: types.Message):
     await message.answer(f"Тестовый бот для проекта Нейрохищник на сайте GeekBrains")
+
+#@dp.message(Command(commands=["info", 'инфо'])) пример перечисления слов активаторов команд
+#@dp.message(F.text.lower() == 'инфо')
+#async def info(message: types.Message):
+    #   number = random.randint(0,100)
+    #   await message.answer(f"Привет, твое число: {number}")
+
+@dp.message(F.text)
+async def msg(message: types.Message):
+    if 'привет' in message.text.lower():
+        await message.reply("И тебе привет!")
+    elif 'как дела' in message.text.lower():
+        await message.reply("Жив-здоров Вашими молитвами....")
+    else:
+        await message.reply("Не понимаю тебя...!")
 
 async def main():
     await dp.start_polling(bot)
