@@ -3,8 +3,8 @@ import config
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
 import logging
-import random
 from keyboards import keyboard
+from random_fox import fox
 
 #Логирование
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +20,7 @@ async def start(message: types.Message):
 @dp.message(Command(commands="стоп"))
 @dp.message(Command(commands="stop"))
 async def stop(message: types.Message):
-    print(message.from_user.full_name)
+    #print(message.from_user.full_name)
     await message.answer(f"Пока, {message.from_user.full_name}")
 
 @dp.message(Command(commands="info"))
@@ -32,6 +32,14 @@ async def start(message: types.Message):
 #async def info(message: types.Message):
     #   number = random.randint(0,100)
     #   await message.answer(f"Привет, твое число: {number}")
+
+@dp.message(F.text.lower() == 'show fox')
+async def info(message: types.Message):
+    img_fox = fox()
+    await message.answer('Вот твоя лиса')
+    await message.answer_photo(img_fox)
+    img_fox = fox()
+    await bot.send_photo(message.from_user.id, img_fox)
 
 @dp.message(F.text)
 async def msg(message: types.Message):
